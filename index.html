@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="renderer" content="webkit">
   <title>unicode字符集</title>
@@ -10,12 +12,14 @@
     body {
       margin: 0;
     }
+
     .container {
       border: 1px solid #000;
       font-size: 0;
       display: flex;
       flex-wrap: wrap;
     }
+
     .container .item {
       min-width: 100px;
       height: 100px;
@@ -27,70 +31,74 @@
       flex: 1;
       position: relative;
     }
+
     .content {
       font-size: 16px;
       margin: auto;
       text-align: center;
     }
+
     .content span {
       display: block;
       line-height: 1.6;
       font-size: 36px;
       font-weight: bold;
     }
+
     .content .unicode {
       right: 5px;
       bottom: 0;
     }
+
     .content .hexdecimal {
       top: 0;
       left: 5px;
     }
-    .content .unicode, .content .hexdecimal {
+
+    .content .unicode,
+    .content .hexdecimal {
       position: absolute;
       font-size: 14px;
       font-weight: normal;
       color: #111;
     }
+
     button {
       padding: 0.5em 1em;
       vertical-align: middle;
     }
-    .custom input{
+
+    .custom input {
       width: 80px;
       vertical-align: middle;
     }
+
     .custom .text {
       line-height: 32px;
       font-size: 12px;
     }
+
     .custom button {
       padding: 0;
     }
+
+    input.search-unicode {
+      width: auto;
+    }
+
+    .link {
+      color: rgba(0, 0, 255, 0.692);
+    }
+    .link:hover {
+      color: rgb(4, 4, 100);
+      cursor: pointer;
+    }
   </style>
 </head>
+
 <body>
-  <!-- <button onclick="render(33, 126)">常用字符<br><span>[33, 126]</span></button>
-  <button onclick="render(0, 65535)">第一平面字符<br><span>[0, 65535]</span></button>
-  <button onclick="render(161, 2042)">不常用字符<br><span>[161, 2042]</span></button>
-  <button onclick="render(2208, 7629)">看不懂的文字<br><span>[2208, 7629]</span></button>
-  <button onclick="render(7678, 8190)">带帽的字符<br><span>[7678, 8190]</span></button>
-  <button onclick="render(8208, 11247)">学科字符和图案<br><span>[8208, 11247]</span></button>
-  <button onclick="render(11264, 11844)">看不懂的文字<br><span>[11264, 11844]</span></button>
-  <button onclick="render(11904, 12245)">中文<br><span>[11904, 12245]</span></button>
-  <button onclick="render(12272, 12727)">日文<br><span>[12272, 12727]</span></button>
-  <button onclick="render(12736, 40917)">中文<br><span>[12736, 40917]</span></button>
-  <button onclick="render(40960, 43967)">看不懂的文字<br><span>[40960, 43967]</span></button>
-  <button onclick="render(44032, 55291)">韩文<br><span>[44032, 55291]</span></button>
-  <button onclick="render(63744, 64217)">中文<br><span>[63744, 64217]</span></button>
-  <button onclick="render(64256, 65535)">看不懂的文字<br><span>[64256, 65535]</span></button>
-  <button onclick="render(169, 169)">©<br><span>169</button>
-  <button onclick="render(174, 174)">®<br><span>174</button>
-  <button onclick="render(8451, 8451)">℃<br><span>8451</button>
-  <button onclick="render(8457, 8457)">℉<br><span>8457</button>
-  <button onclick="render(9193, 9210)">播放器相关控件<br><span>[9193, 9210]</button>
-  <button onclick="render(9312, 9471)">带括号或圆圈的字符<br><span>[9312, 9471]</button> -->
   <div id="controlsContainer"></div>
+
   <div class="custom">
     <span class="text">自定义范围(可以查看其他平面)</span>
     <input id="start" type="number" name="" id="" min="0" max="16777215" value="0">
@@ -99,13 +107,31 @@
     <button onclick="handleSearch()">查找</button>
   </div>
   <div class="custom">
-      <span class="text">输入字符查找 unicode(支持多字符)</span>
-      <input id="text" type="text" name="" id="">
-      <button onclick="handleSearchUnicode()">查找</button>
-    </div>
+    <span class="text">输入字符查找 unicode(支持多字符)</span>
+    <input class="search-unicode" id="text" type="text" name="" id="" value="https://github.com/changk99/unicodeSearch">
+    <button id="search-unicode" onclick="handleSearchUnicode()">查找</button>
+    <button onclick="clear()">清空</button>
+  </div>
+  <a href="https://github.com/changk99/unicodeSearch">
+    <button>如果你看得懂这些文字,欢迎补充区间 <span class="link" style="text-decoration-line: underline">(https://github.com/changk99/unicodeSearch)</span></button>
+  </span>
+</a>
   <div class="container ">
   </div>
+  <script src="./range.js"></script>
   <script>
+    // 初始化
+    const search = document.getElementById('search-unicode')
+    requestAnimationFrame(() => {
+      search.onclick()
+    })
+
+    // 清空查找框
+    function clear() {
+      search.value = ''
+    }
+
+    // 渲染 unicode 字符
     function toHex(unicode) {
       let hex = unicode.toString(16)
       if (hex.length < 5) {
@@ -114,10 +140,12 @@
         return "\\u" + (`000000${hex}`.slice(-6))
       }
     }
+
     function toText(unicode) {
-      return  String.fromCodePoint(unicode)
+      return String.fromCodePoint(unicode)
     }
-    function createItem (unicode) {
+
+    function createItem(unicode) {
       let hex = toHex(unicode)
       let text = toText(unicode)
       let html = `
@@ -131,6 +159,7 @@
     }
     let requestId
     const container = document.getElementsByClassName('container')[0]
+
     function renderItem(start, end) {
       if (isNaN(start = Number(start))) {
         return
@@ -140,6 +169,7 @@
         start = 0
       }
       let slice = 100
+
       function render() {
         const fragment = document.createDocumentFragment()
         for (let j = 0; j < slice && start <= end; j++, start++) {
@@ -153,28 +183,29 @@
       }
       requestAnimationFrame(render)
     }
-    function render (...args) {
+
+    function render(...args) {
       if (requestId) {
         cancelAnimationFrame(requestId)
       }
       container.innerHTML = ''
       renderItem(...args)
-    }    
-    render(33, 126) // 支持范围
+    }
 
-    function handleSearch () {
+    // 查找 unicode 字符
+    function handleSearch() {
       const start = document.getElementById('start').value
       const end = document.getElementById('end').value
       if (start > end) {
         return render(end, start)
-      } 
+      }
       return render(start, end)
     }
 
-    function handleSearchUnicode () {
+    function handleSearchUnicode() {
       const text = document.getElementById('text').value
       if (text === '') {
-       return  
+        return
       }
       if (requestId) {
         cancelAnimationFrame(requestId)
@@ -185,91 +216,10 @@
         renderItem(unicode, unicode)
       })
     }
-    
-    const info = [
-      {
-        text: "常用字符",
-        range: [33, 126]
-      },
-      {
-        text: "第一平面字符",
-        range: [0, 65535]
-      },
-      {
-        text: "不常用字符",
-        range: [161, 2042]
-      },
-      {
-        text: "看不懂的文字",
-        range: [2208, 7629]
-      },
-      {
-        text: "带帽的字符",
-        range: [7678, 8190]
-      },
-      {
-        text: "学科字符和图案",
-        range: [8208, 11247]
-      },
-      {
-        text: "看不懂的文字",
-        range: [11264, 11844]
-      },
-      {
-        text: "中文",
-        range: [11904, 12245]
-      },
-      {
-        text: "日文",
-        range: [12272, 12727]
-      },
-      {
-        text: "中文",
-        range: [12736, 40917]
-      },
-      {
-        text: "看不懂的文字",
-        range: [40960, 43967]
-      },
-      {
-        text: "韩文",
-        range: [44032, 55291]
-      },
-      {
-        text: "中文",
-        range: [63744, 64217]
-      },
-      {
-        text: "看不懂的文字",
-        range: [64256, 65535]
-      },
-      {
-        text: "©",
-        range: 169
-      },
-      {
-        text: "®",
-        range: 174
-      },
-      {
-        text: "℃",
-        range: 8451
-      },
-      {
-        text: "℉",
-        range: 8457
-      },
-      {
-        text: "播放器相关控件",
-        range: [9193, 9210]
-      },
-      {
-        text: "带括号或圆圈的字符",
-        range: [9312, 9471]
-      },
-    ]
 
+    // 渲染控件
     const controlsContainer = document.getElementById('controlsContainer')
+
     function getControlHtml(item) {
       let range = item.range
       let start
@@ -287,6 +237,7 @@
       `
       return html
     }
+
     function renderControls(info) {
       let html = ""
       html = info.reduce((html, item) => {
@@ -304,7 +255,7 @@
       } else {
         return
       }
-      let [,start, end] = rangText.match(/(\d+)(?:[^\d]+(\d+))?/)
+      let [, start, end] = rangText.match(/(\d+)(?:[^\d]+(\d+))?/)
       if (!end) {
         end = start
       }
@@ -313,4 +264,5 @@
     renderControls(info)
   </script>
 </body>
+
 </html>
