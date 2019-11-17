@@ -150,7 +150,7 @@
       if (hex.length < 5) {
         return "\\u" + (`0000${hex}`.slice(-4))
       } else {
-        return "\\u" + (`000000${hex}`.slice(-6))
+        return "\\u" + `{${hex}}`
       }
     }
 
