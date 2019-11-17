@@ -207,8 +207,13 @@
 
     // 查找 unicode 字符
     function handleSearch() {
-      const start = document.getElementById('start').value
-      const end = document.getElementById('end').value
+      let start = document.getElementById('start').value
+      let end = document.getElementById('end').value
+      start = Number(start.trim())
+      end = Number(end.trim())
+      if (isNaN(start) || isNaN(end)) {
+        return
+      }
       if (start > end) {
         return render(end, start)
       }
