@@ -96,7 +96,7 @@
   </style>
 </head>
 
-<body>
+<body onerror="handlerError()">
   <div id="controlsContainer"></div>
 
   <div class="custom">
@@ -110,7 +110,7 @@
     <span class="text">输入字符查找 unicode(支持多字符)</span>
     <input class="search-unicode" id="text" type="text" name="" id="" value="https://github.com/changk99/unicodeSearch">
     <button id="search-unicode" onclick="handleSearchUnicode()">查找</button>
-    <button onclick="clear()">清空</button>
+    <button onclick="clearSearchUnicode()">清空</button>
   </div>
   <a href="https://github.com/changk99/unicodeSearch">
     <button>如果你看得懂这些文字,欢迎补充区间 <span class="link" style="text-decoration-line: underline">(https://github.com/changk99/unicodeSearch)</span></button>
@@ -121,14 +121,20 @@
   <script src="./range.js"></script>
   <script>
     // 初始化
-    const search = document.getElementById('search-unicode')
+    const searchUnicode = document.getElementById('search-unicode')
+    const searchUnicodeInput = document.getElementsByClassName('search-unicode')[0]
     requestAnimationFrame(() => {
-      search.onclick()
+      searchUnicode.onclick()
     })
 
+    function handlerError(err) {
+      alert('请使用支持 es6 的浏览器')
+    }
+
     // 清空查找框
-    function clear() {
-      search.value = ''
+    function clearSearchUnicode() {
+      searchUnicodeInput.value = ''
+      searchUnicodeInput.focus()
     }
 
     // 渲染 unicode 字符
