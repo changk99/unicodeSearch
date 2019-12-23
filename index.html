@@ -108,10 +108,18 @@
 
   <div class="custom">
     <span class="text">自定义范围(可以查看其他平面)</span>
-    <input id="start" type="number" name="" id="" min="0" max="16777215" value="0">
+    <input id="start-range" type="number" name="" id="" min="0" max="16777215" value="0">
     <span>-</span>
-    <input id="end" type="number" name="" id="" min="0" max="16777215" value="65535">
+    <input id="end-range" type="number" name="" id="" min="0" max="16777215" value="65535">
     <button onclick="handleSearch()">查找</button>
+    <label for="toggle-hex">
+      <input type="checkbox" id="toggle-hex" style="width: auto;">
+      十六进制
+    </label>
+    <label for="toggle-range">
+      <input type="checkbox" id="toggle-range" style="width: auto;">
+      单字符查询
+    </label>
   </div>
   <div class="custom">
     <span class="text">输入字符查找 unicode(支持多字符)</span>
@@ -130,6 +138,62 @@
     // 初始化
     const searchUnicode = document.getElementById('search-unicode')
     const searchUnicodeInput = document.getElementsByClassName('search-unicode')[0]
+
+    const toggleHex = document.getElementById('toggle-hex')
+    const toggleRange = document.getElementById('toggle-range')
+
+    const startRange = document.getElementById('start-range')
+    const endRange = document.getElementById('end-range')
+
+    function hexToDecimal(hex) {
+      return parseInt(hex, 16)
+    }
+
+    function decimalToHex(decimal) {
+      let hex = decimal.toString(16)
+      return hex.length % 2 ? 0 + hex : hex
+    }
+
+    toggleRange.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        endRange.value = startRange.value 
+      }
+    })
+
+    toggleHex.addEventListener('change', (e) => {
+      const target = e.target
+      if (target.checked) {
+        startRange.type = 'text'
+        endRange.type = 'text'
+        let startValue = startRange.value
+        startValue = parseInt(startValue)
+        startRange.value = decimalToHex(startValue)
+        let endValue = endRange.value
+        endValue = parseInt(endValue)
+        endRange.value = decimalToHex(endValue)
+      } else {
+        let startValue = startRange.value
+        startRange.value = hexToDecimal(startValue)
+        let endValue = endRange.value
+        endRange.value = hexToDecimal(endValue)
+        startRange.type = 'number'
+        endRange.type = 'number'
+      }
+    })
+
+    startRange.addEventListener('input', (e) => {
+      if (toggleRange.checked) {
+        endRange.value = e.target.value
+      }
+    })
+
+    endRange.addEventListener('input', (e) => {
+      if (toggleRange.checked) {
+        startRange.value = e.target.value
+      }
+    })
+
+
     requestAnimationFrame(() => {
       searchUnicode.onclick()
     })
@@ -207,10 +271,12 @@
 
     // 查找 unicode 字符
     function handleSearch() {
-      let start = document.getElementById('start').value
-      let end = document.getElementById('end').value
-      start = Number(start.trim())
-      end = Number(end.trim())
+      let start = startRange.value
+      let end = endRange.value
+      if (toggleHex.checked) {
+        start = hexToDecimal(start)
+        end = hexToDecimal(end)
+      }
       if (isNaN(start) || isNaN(end)) {
         return
       }
