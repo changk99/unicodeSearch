@@ -1,1 +1,1 @@
-#  查询 unicode 编码工具页面(https://changk99.github.io/unicodeSearch/)
+#  查询 unicode 编码工具(https://changk99.github.io/unicodeSearch/)
